@@ -24,11 +24,43 @@ testAll: dominion.o testSuite.c
 interface.o: interface.h interface.c
 	gcc -c interface.c -g  $(CFLAGS)
 
+
+
+#This is the code I added to compile my random test files
+randomTest1: randomtestcard1.c dominion.o rngs.o
+	gcc -o rtc1 randomtestcard1.c -g dominion.o rngs.o $(CFLAGS)
+
+randomTest2: randomtestcard2.c dominion.o rngs.o
+	gcc -o rtc2 randomtestcard2.c -g  dominion.o rngs.o $(CFLAGS)
+
+randomTestAdv: randomtestadventurer.c dominion.o rngs.o
+	gcc -o rtca randomtestadventurer.c -g dominion.o rngs.o $(CFLAGS)
+
+rts: randomtestcard1.c randomtestcard2.c randomtestadventurer.c
+	make randomTest1
+	make randomTest2
+	make randomTestAdv
+
+#This runs each test file and creates the .out files
+runrts: rtc1 rtc2 rtca
+	./rtc1 &> randomtestcard1.out
+	gcov randomtestcard1.c -b >> randomtestcard1.out
+	cat randomtestcard1.c.gcov >> randomtestcard1.out
+	./rtc2 &> randomtestcard2.out
+	gcov randomtestcard2.c -b >> randomtestcard2.out
+	cat randomtestcard2.c.gcov >> randomtestcard2.out
+	./rtca &> randomtestcardadventurer.out
+	gcov randomtestadventurer.c -b >> randomtestcardadventurer.out
+	cat randomtestadventurer.c.gcov >> randomtestadventurer.out
+
+
+
+
+
 runtests: testDrawCard 
 	./testDrawCard &> unittestresult.out
 	gcov dominion.c >> unittestresult.out
 	cat dominion.c.gcov >> unittestresult.out
-
 
 player: player.c interface.o
 	gcc -o player player.c -g  dominion.o rngs.o interface.o $(CFLAGS)
@@ -36,4 +68,7 @@ player: player.c interface.o
 all: playdom player 
 
 clean:
-	rm -f *.o playdom.exe playdom player player.exe  *.gcov *.gcda *.gcno *.so *.out testDrawCard testDrawCard.exe
+	rm -f *.o playdom.exe playdom player player.exe  *.gcov *.gcda *.gcno *.so *.out testDrawCard testDrawCard.exe rtc1 rtc2 rtca *.out
+
+
+
