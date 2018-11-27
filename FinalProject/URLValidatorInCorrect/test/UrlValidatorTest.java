@@ -21,7 +21,31 @@ public class UrlValidatorTest extends TestCase {
    
    public void testManualTest()
    {
-//You can use this function to implement your manual testing	   
+	UrlValidator urlVal = new UrlValidator(null, null, 0);
+	   
+	   //Should pass, URL is valid
+	   assertTrue(urlVal.isValid("http://www.google.com:80/test1?action=view"));
+	   
+	   //Should fail for Scheme
+	   assertTrue(urlVal.isValid("h3ttp://www.google.com:80/test1?action=view"));
+	   assertTrue(urlVal.isValid("http/www.google.com:80/test1?action=view"));
+	   
+	   //Should fail for authority
+	   assertTrue(urlVal.isValid("http://256.256.256.256:80/test1?action=view"));
+	   assertTrue(urlVal.isValid("http://aaa:80/test1?action=view"));
+	   
+	   //Should fail for port
+	   assertTrue(urlVal.isValid("http://www.google.com:-1/test1?action=view"));
+	   assertTrue(urlVal.isValid("http://www.google.com:32b/test1?action=view"));
+	   
+	   //Should fail for path
+	   assertTrue(urlVal.isValid("http://www.google.com:80/../?action=view"));
+	   assertTrue(urlVal.isValid("http://www.google.com:80/file1//file2?action=view"));
+	   
+	   //Should fail for query
+	   assertTrue(urlVal.isValid("http://www.google.com:80/test1?action=upload"));
+	   assertTrue(urlVal.isValid("http://www.google.com:80/test1?aview"));
+	  	   
 	   
    }
    
